@@ -1,11 +1,15 @@
 
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 import { ArrowRight, Shield, MapPin, Clock, Star, ChevronRight, Sparkles, Zap, Heart } from 'lucide-react';
-import { toast } from '@/hooks/use-toast';
+
+// Simple toast function without external dependencies
+const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+  const toast = document.createElement('div');
+  toast.className = `fixed top-4 right-4 p-4 rounded-lg text-white z-50 ${type === 'success' ? 'bg-green-500' : 'bg-red-500'}`;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => document.body.removeChild(toast), 3000);
+};
 
 const Index = () => {
   const [autoNumber, setAutoNumber] = useState('');
@@ -13,16 +17,12 @@ const Index = () => {
   const [toLocation, setToLocation] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
-  const [fareDetails, setFareDetails] = useState(null);
+  const [fareDetails, setFareDetails] = useState<any>(null);
   const [pulseAnimation, setPulseAnimation] = useState(false);
 
   const handleVerifyAuto = () => {
     if (!autoNumber || !fromLocation || !toLocation) {
-      toast({
-        title: "Missing Information",
-        description: "Please fill in all required fields",
-        variant: "destructive",
-      });
+      showToast("Please fill in all required fields", 'error');
       setPulseAnimation(true);
       setTimeout(() => setPulseAnimation(false), 1000);
       return;
@@ -30,10 +30,10 @@ const Index = () => {
 
     setIsLoading(true);
     
-    // Simulate API call for fare calculation and verification
+    // Simulate offline verification and fare calculation
     setTimeout(() => {
       const baseFare = 25;
-      const distanceKm = Math.random() * 15 + 2; // Random distance between 2-17 km
+      const distanceKm = Math.random() * 15 + 2;
       const farePerKm = 12;
       const totalFare = Math.round(baseFare + (distanceKm * farePerKm));
       
@@ -42,7 +42,7 @@ const Index = () => {
         distance: distanceKm.toFixed(1),
         farePerKm,
         totalFare,
-        estimatedTime: Math.round(distanceKm * 3 + Math.random() * 10), // Rough time estimate
+        estimatedTime: Math.round(distanceKm * 3 + Math.random() * 10),
         driverName: "Ravi Kumar",
         rating: 4.6,
         verified: true
@@ -51,10 +51,7 @@ const Index = () => {
       setShowResults(true);
       setIsLoading(false);
       
-      toast({
-        title: "🎉 Auto Verified Successfully!",
-        description: `✨ Fair fare calculated: ₹${totalFare}`,
-      });
+      showToast(`🎉 Auto Verified! Fair fare: ₹${totalFare}`, 'success');
     }, 2000);
   };
 
@@ -101,32 +98,32 @@ const Index = () => {
           
           {/* Left Explanation Panel */}
           <div className="lg:col-span-3 space-y-6">
-            <Card className="bg-white/80 backdrop-blur-sm border-l-4 border-l-purple-500 animate-fade-in shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-              <CardHeader>
-                <CardTitle className="text-purple-900 flex items-center gap-2">
+            <div className="bg-white/80 backdrop-blur-sm border-l-4 border-l-purple-500 animate-fade-in shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 rounded-lg">
+              <div className="p-6">
+                <h3 className="text-purple-900 flex items-center gap-2 font-bold text-lg mb-4">
                   <ArrowRight className="h-5 w-5 animate-bounce" />
                   🔥 How It Works
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4 text-sm">
-                <div className="flex items-start gap-3 hover:bg-purple-50 p-2 rounded-lg transition-colors">
-                  <div className="w-6 h-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full flex items-center justify-center text-xs font-bold animate-pulse">1</div>
-                  <p>🚗 Enter the vehicle's registration number</p>
+                </h3>
+                <div className="space-y-4 text-sm">
+                  <div className="flex items-start gap-3 hover:bg-purple-50 p-2 rounded-lg transition-colors">
+                    <div className="w-6 h-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full flex items-center justify-center text-xs font-bold animate-pulse">1</div>
+                    <p>🚗 Enter the vehicle's registration number</p>
+                  </div>
+                  <div className="flex items-start gap-3 hover:bg-purple-50 p-2 rounded-lg transition-colors">
+                    <div className="w-6 h-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full flex items-center justify-center text-xs font-bold animate-pulse">2</div>
+                    <p>⚡ Get instant verification & fair fare calculation</p>
+                  </div>
+                  <div className="flex items-start gap-3 hover:bg-purple-50 p-2 rounded-lg transition-colors">
+                    <div className="w-6 h-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full flex items-center justify-center text-xs font-bold animate-pulse">3</div>
+                    <p>🛡️ Enjoy safe, tracked, and fair-priced rides</p>
+                  </div>
+                  <div className="flex items-start gap-3 hover:bg-purple-50 p-2 rounded-lg transition-colors">
+                    <div className="w-6 h-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full flex items-center justify-center text-xs font-bold animate-pulse">4</div>
+                    <p>📱 Seamless integration with any ride service</p>
+                  </div>
                 </div>
-                <div className="flex items-start gap-3 hover:bg-purple-50 p-2 rounded-lg transition-colors">
-                  <div className="w-6 h-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full flex items-center justify-center text-xs font-bold animate-pulse">2</div>
-                  <p>⚡ Get instant verification & fair fare calculation</p>
-                </div>
-                <div className="flex items-start gap-3 hover:bg-purple-50 p-2 rounded-lg transition-colors">
-                  <div className="w-6 h-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full flex items-center justify-center text-xs font-bold animate-pulse">3</div>
-                  <p>🛡️ Enjoy safe, tracked, and fair-priced rides</p>
-                </div>
-                <div className="flex items-start gap-3 hover:bg-purple-50 p-2 rounded-lg transition-colors">
-                  <div className="w-6 h-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-full flex items-center justify-center text-xs font-bold animate-pulse">4</div>
-                  <p>📱 Seamless integration with any ride service</p>
-                </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
             
             <div className="hidden lg:flex justify-center">
               <ChevronRight className="h-8 w-8 text-purple-400 animate-pulse" />
@@ -147,10 +144,10 @@ const Index = () => {
                     </div>
                     <span className="font-semibold text-gray-800">Smart Ride</span>
                   </div>
-                  <Badge variant="outline" className="text-green-600 border-green-600 animate-pulse">
-                    <div className="w-2 h-2 bg-green-500 rounded-full mr-1 animate-ping"></div>
+                  <div className="text-green-600 border border-green-600 rounded-full px-2 py-1 text-xs animate-pulse flex items-center gap-1">
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-ping"></div>
                     🟢 Live
-                  </Badge>
+                  </div>
                 </div>
 
                 {!showResults ? (
@@ -163,51 +160,51 @@ const Index = () => {
                       </h3>
                       
                       <div className="space-y-3">
-                        <Input
+                        <input
                           placeholder="🚗 Vehicle Registration (e.g., KA01AB1234)"
                           value={autoNumber}
                           onChange={(e) => setAutoNumber(e.target.value.toUpperCase())}
-                          className="bg-gray-50 hover:bg-purple-50 transition-colors border-purple-200 focus:border-purple-400"
+                          className="w-full h-10 px-3 py-2 bg-gray-50 hover:bg-purple-50 transition-colors border border-purple-200 focus:border-purple-400 rounded-md text-sm"
                         />
                         
                         <div className="flex items-center gap-2 hover:scale-105 transition-transform">
                           <MapPin className="h-4 w-4 text-green-500 animate-bounce" />
-                          <Input
+                          <input
                             placeholder="📍 From (Pickup Location)"
                             value={fromLocation}
                             onChange={(e) => setFromLocation(e.target.value)}
-                            className="bg-gray-50 hover:bg-green-50 transition-colors border-green-200 focus:border-green-400"
+                            className="w-full h-10 px-3 py-2 bg-gray-50 hover:bg-green-50 transition-colors border border-green-200 focus:border-green-400 rounded-md text-sm"
                           />
                         </div>
                         
                         <div className="flex items-center gap-2 hover:scale-105 transition-transform">
                           <MapPin className="h-4 w-4 text-red-500 animate-bounce" />
-                          <Input
+                          <input
                             placeholder="🎯 To (Drop Location)"
                             value={toLocation}
                             onChange={(e) => setToLocation(e.target.value)}
-                            className="bg-gray-50 hover:bg-red-50 transition-colors border-red-200 focus:border-red-400"
+                            className="w-full h-10 px-3 py-2 bg-gray-50 hover:bg-red-50 transition-colors border border-red-200 focus:border-red-400 rounded-md text-sm"
                           />
                         </div>
                       </div>
 
-                      <Button 
+                      <button 
                         onClick={handleVerifyAuto}
                         disabled={isLoading}
-                        className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+                        className="w-full h-10 px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl rounded-md text-sm font-medium"
                       >
                         {isLoading ? (
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center justify-center gap-2">
                             <Sparkles className="h-4 w-4 animate-spin" />
-                            '🔍 Verifying Magic...'
+                            🔍 Verifying Magic...
                           </div>
                         ) : (
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center justify-center gap-2">
                             <Shield className="h-4 w-4" />
-                            '⚡ Verify & Calculate Fare'
+                            ⚡ Verify & Calculate Fare
                           </div>
                         )}
-                      </Button>
+                      </button>
                     </div>
                   </>
                 ) : (
@@ -219,9 +216,9 @@ const Index = () => {
                           🎉 Ride Details
                           <Star className="h-4 w-4 text-yellow-500 animate-spin" />
                         </h3>
-                        <Button variant="ghost" size="sm" onClick={resetForm} className="hover:bg-purple-100 transition-colors">
+                        <button onClick={resetForm} className="px-2 py-1 hover:bg-purple-100 transition-colors rounded text-sm">
                           🔄 New Ride
-                        </Button>
+                        </button>
                       </div>
                       
                       {fareDetails && (
@@ -282,54 +279,54 @@ const Index = () => {
               <ChevronRight className="h-8 w-8 text-purple-400 animate-pulse rotate-180" />
             </div>
             
-            <Card className="bg-white/80 backdrop-blur-sm border-l-4 border-l-green-500 animate-fade-in shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-              <CardHeader>
-                <CardTitle className="text-green-700 flex items-center gap-2">
+            <div className="bg-white/80 backdrop-blur-sm border-l-4 border-l-green-500 animate-fade-in shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 rounded-lg">
+              <div className="p-6">
+                <h3 className="text-green-700 flex items-center gap-2 font-bold text-lg mb-4">
                   🌟 Benefits for All
                   <Heart className="h-4 w-4 text-pink-500 animate-pulse" />
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4 text-sm">
-                <div className="hover:bg-green-50 p-2 rounded-lg transition-colors">
-                  <h4 className="font-semibold text-purple-900 mb-2 flex items-center gap-1">
-                    🚶‍♂️ For Riders:
-                    <Sparkles className="h-3 w-3 animate-spin" />
-                  </h4>
-                  <ul className="space-y-1 text-gray-600">
-                    <li className="hover:text-purple-600 transition-colors">• 💰 Fair, transparent pricing</li>
-                    <li className="hover:text-purple-600 transition-colors">• 🛡️ Enhanced safety verification</li>
-                    <li className="hover:text-purple-600 transition-colors">• 📱 Ride tracking & history</li>
-                    <li className="hover:text-purple-600 transition-colors">• ✨ Seamless experience</li>
-                  </ul>
+                </h3>
+                <div className="space-y-4 text-sm">
+                  <div className="hover:bg-green-50 p-2 rounded-lg transition-colors">
+                    <h4 className="font-semibold text-purple-900 mb-2 flex items-center gap-1">
+                      🚶‍♂️ For Riders:
+                      <Sparkles className="h-3 w-3 animate-spin" />
+                    </h4>
+                    <ul className="space-y-1 text-gray-600">
+                      <li className="hover:text-purple-600 transition-colors">• 💰 Fair, transparent pricing</li>
+                      <li className="hover:text-purple-600 transition-colors">• 🛡️ Enhanced safety verification</li>
+                      <li className="hover:text-purple-600 transition-colors">• 📱 Ride tracking & history</li>
+                      <li className="hover:text-purple-600 transition-colors">• ✨ Seamless experience</li>
+                    </ul>
+                  </div>
+                  
+                  <div className="hover:bg-blue-50 p-2 rounded-lg transition-colors">
+                    <h4 className="font-semibold text-purple-900 mb-2 flex items-center gap-1">
+                      👨‍✈️ For Drivers:
+                      <Zap className="h-3 w-3 animate-pulse" />
+                    </h4>
+                    <ul className="space-y-1 text-gray-600">
+                      <li className="hover:text-blue-600 transition-colors">• 📈 Increased earning opportunities</li>
+                      <li className="hover:text-blue-600 transition-colors">• 🤝 Trust building with passengers</li>
+                      <li className="hover:text-blue-600 transition-colors">• ⚖️ Fair commission structure</li>
+                      <li className="hover:text-blue-600 transition-colors">• 💳 Digital payment options</li>
+                    </ul>
+                  </div>
+                  
+                  <div className="hover:bg-pink-50 p-2 rounded-lg transition-colors">
+                    <h4 className="font-semibold text-purple-900 mb-2 flex items-center gap-1">
+                      🏢 For Ride Services:
+                      <Star className="h-3 w-3 animate-spin" />
+                    </h4>
+                    <ul className="space-y-1 text-gray-600">
+                      <li className="hover:text-pink-600 transition-colors">• 🌍 Expanded market presence</li>
+                      <li className="hover:text-pink-600 transition-colors">• 📊 Increased transaction volume</li>
+                      <li className="hover:text-pink-600 transition-colors">• ❤️ Stronger brand loyalty</li>
+                      <li className="hover:text-pink-600 transition-colors">• 🏗️ Comprehensive ecosystem</li>
+                    </ul>
+                  </div>
                 </div>
-                
-                <div className="hover:bg-blue-50 p-2 rounded-lg transition-colors">
-                  <h4 className="font-semibold text-purple-900 mb-2 flex items-center gap-1">
-                    👨‍✈️ For Drivers:
-                    <Zap className="h-3 w-3 animate-pulse" />
-                  </h4>
-                  <ul className="space-y-1 text-gray-600">
-                    <li className="hover:text-blue-600 transition-colors">• 📈 Increased earning opportunities</li>
-                    <li className="hover:text-blue-600 transition-colors">• 🤝 Trust building with passengers</li>
-                    <li className="hover:text-blue-600 transition-colors">• ⚖️ Fair commission structure</li>
-                    <li className="hover:text-blue-600 transition-colors">• 💳 Digital payment options</li>
-                  </ul>
-                </div>
-                
-                <div className="hover:bg-pink-50 p-2 rounded-lg transition-colors">
-                  <h4 className="font-semibold text-purple-900 mb-2 flex items-center gap-1">
-                    🏢 For Ride Services:
-                    <Star className="h-3 w-3 animate-spin" />
-                  </h4>
-                  <ul className="space-y-1 text-gray-600">
-                    <li className="hover:text-pink-600 transition-colors">• 🌍 Expanded market presence</li>
-                    <li className="hover:text-pink-600 transition-colors">• 📊 Increased transaction volume</li>
-                    <li className="hover:text-pink-600 transition-colors">• ❤️ Stronger brand loyalty</li>
-                    <li className="hover:text-pink-600 transition-colors">• 🏗️ Comprehensive ecosystem</li>
-                  </ul>
-                </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
         </div>
 
